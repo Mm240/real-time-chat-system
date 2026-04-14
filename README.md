@@ -1,93 +1,124 @@
-## Global node js packages
+
+# 💬 Real-Time Chat System
+
+A scalable real-time chat application built using WebSockets (Socket.IO), designed with an event-driven architecture and production-ready backend practices.
+
+---
+
+## 🚀 Features
+
+- 🔐 JWT-based Authentication
+- 💬 Real-time messaging using WebSockets
+- 👥 One-to-one & room-based chat
+- 📦 Message persistence with PostgreSQL
+- 📁 File sharing support
+- ⚡ Event-driven architecture
+- 🐳 Dockerized services (DB + app)
+- 📊 Swagger API documentation
+
+---
+
+## 🧠 System Design Overview
+
+This application follows an **event-driven architecture** using WebSockets:
+
+- Client connects via Socket.IO
+- Server authenticates using JWT
+- Events handled:
+  - `msg_send` → send message
+  - `msg_receive` → receive message
+  - `msg_send:file` → send files
+
+Messages are:
+1. Validated
+2. Stored in DB
+3. Emitted to recipient in real-time
+
+---
+
+## 🏗️ Tech Stack
+
+### Backend
+- Node.js
+- TypeScript
+- Socket.IO
+- Express / NestJS
+
+### Database
+- PostgreSQL
+- db-migrate
+
+### DevOps
+- Docker
+- Docker Compose
+
+### Tools
+- Swagger
+- Nodemon
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone the repository
+
 ```bash
-$ npm install -g ts-node@10.5.0
-$ npm install -g nodemon
-$ npm install -g db-migrate
-$ npm install -g db-migrate-pg
-```
+git clone https://github.com/Mm240/real-time-chat-system.git
+cd real-time-chat-system
+2️⃣ Install dependencies
+npm install
+3️⃣ Setup environment variables
+cp .env.sample .env
 
-## Important!
-Before starting, install docker-compose to your machine and start docker containers:
-```bash
-$ docker-compose up
-```
+Update values like:
 
-## Environment
-* need create .env file
-* example: .env.sample
+DB credentials
+JWT secret
+4️⃣ Start Docker services
+docker-compose up
+5️⃣ Run database migrations
+npm run up
+6️⃣ Start the server
+npm run start:dev
+🌐 API Documentation
 
-## Migrate database
-```bash
-# Create tables
-$ npm run up
-# Delete tables
-$ npm run down
-```
+Swagger available at:
 
-## Start project
-```bash
-$ npm install
-$ npm run start:dev
-```
-
-## Swagger documentation
-* http://host:port/swagger
-
-## Socket.io api
-* ws://host:port/chat
-  - Headers:
-    - authorization
-  - Events. Listen on connect.
-    - msg_receive
-    - error
-  - Sending messages
-    - Event send message:
-      - msg_send
-    - Event send file:
-      - msg_send:file
-
-### [Introduction video link for testing socket.io api via Postman](https://youtu.be/H-7EZVj9D-k)
-
-## Examples socket.io api
-Message send: type JSON
-```json
+http://localhost:PORT/swagger
+🔌 WebSocket Endpoint
+ws://localhost:PORT/chat
+Headers:
+Authorization: Bearer <JWT_TOKEN>
+📡 Socket Events
+Send Message
 {
-    "room": "2d52e031-7039-48bb-8052-056649670bd1",
-    "interlocutorId": 2,
-    "message": "Hi, I'm Robert Deniro"
+  "room": "room-id",
+  "interlocutorId": 2,
+  "message": "Hello!"
 }
-```
-Message receive: type JSON
-```json
+Receive Message
 {
-    "id": 10,
-    "room": "2d52e031-7039-48bb-8052-056649670bd1",
-    "date": "2022-08-09T09:55:22.753Z",
-    "message": "Hi, I'm Robert Deniro",
-    "filePath": null,
-    "from": 4,
-    "to": 2
+  "id": 10,
+  "room": "room-id",
+  "message": "Hello!",
+  "from": 4,
+  "to": 2
 }
-```
-
-File send: type JSON
-```json
+Send File
 {
-    "room": "2d52e031-7039-48bb-8052-056649670bd1",
-    "interlocutorId": 2,
-    "file": "text file",
-    "extension": "txt"
+  "room": "room-id",
+  "interlocutorId": 2,
+  "file": "file-content",
+  "extension": "txt"
 }
-```
-File receive: type JSON
-```json
-{
-    "id": 9,
-    "room": "2d52e031-7039-48bb-8052-056649670bd1",
-    "date": "2022-08-09T08:15:59.816Z",
-    "message": null,
-    "filePath": "http://localhost:8050/files/a39d83eb-ad2d-4182-a270-5c576d29e340.txt",
-    "from": 4,
-    "to": 2
-}
-```
+📈 Future Improvements
+🟢 Online/offline presence tracking
+✍️ Typing indicators
+📩 Read receipts
+⚡ Redis pub/sub for scaling
+🧵 Group chat support
+🎯 Key Highlights
+Built a real-time system using WebSockets
+Implemented event-driven backend architecture
+Designed scalable messaging flow
+Integrated persistent storage with PostgreSQL
